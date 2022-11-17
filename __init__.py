@@ -4,58 +4,51 @@
 """
 import os
 from pprint import pprint as pp
+from Pricelist import Pricelist
 
 
 PRESETS = {
 	"taimukake": {
+		"processor": "taimukakeProcessor",
 		"startRow": 4,
-		"endRow": 14,
-		"series": "A", 
-		"model": "B",
-		"price": "D",
-		"availability": "E"
+		"cols": [
+			"series",
+			"model",
+			'lhr',
+			"price",
+			"availability"
+		]
 	}
 }
 
-def main():
-	clearOutput()
-	
-	pricelistFilename = letUserChooseFile()
-	pickedPreset = letUserChoosePreset()
 
-	pricelistFile = parseXlsFile(pricelistFilename, pickedPreset)
+def main():
+	pricelist_filename = let_user_choose_file()
+	picked_preset = let_user_choose_preset()
+	pricelist = Pricelist(pricelist_filename, picked_preset)
+	pp(pricelist.processed_pricelist)
 	return 1
 
-def clearOutput():
-	os.system("clear")
-	os.system("cls")
 
-def letUserChooseFile():
-  files = os.listdir("./pricelists")
-  print("Выберите файл:")
-  for idx, fname in enumerate(files):
-  	print(f"{idx}. {fname}")
-  
-  userInput = input()
-  userPick = files[int(userInput)]
-  return userPick
+def let_user_choose_file():
+	files = os.listdir("./pricelists")
+	print("Выберите файл:")
+	for idx, fname in enumerate(files):
+		print(f"{idx}. {fname}")
+	# user_input = input()
+	user_input = 0
+	user_pick = files[int(user_input)]
+	return user_pick
 
-def letUserChoosePreset():
-	listOfPresets = list(PRESETS.keys())
+
+def let_user_choose_preset():
+	list_of_presets = list(PRESETS.keys())
 	print("\nВыберите пресет:")
-	for idx,preset in enumerate(listOfPresets):
+	for idx,preset in enumerate(list_of_presets):
 		print(f"{idx}. {preset}")
-	return PRESETS[ listOfPresets[int(input())] ]
-	
-def parseXlsFile(filename, preset):
-	book = xlrd.open_workbook(f"./pricelists/{filename}")
-	sheet = book.sheet_by_index(0)
-	rows = []
-	
-	startRow = preset["startRow"] or 0
-	for idx in range(startRow, sheet.nrows):
-		rows.append(sheet.row(idx))
-	pp(rows)
+	# return PRESETS[list_of_presets[int(input())]]
+	return PRESETS[list_of_presets[0]]
+
 
 if __name__ == "__main__":
-    main()
+	main()
