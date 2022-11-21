@@ -4,13 +4,13 @@
 """
 import os
 from pprint import pprint as pp
-from Pricelist import Pricelist
+# from Pricelist import TaimukakePricelist
 
 
 PRESETS = {
 	"taimukake": {
-		"processor": "taimukakeProcessor",
-		"startRow": 4,
+		"processor": "TaimukakePricelist",
+		"startRow": 3,
 		"cols": [
 			"series",
 			"model",
@@ -25,8 +25,13 @@ PRESETS = {
 def main():
 	pricelist_filename = let_user_choose_file()
 	picked_preset = let_user_choose_preset()
-	pricelist = Pricelist(pricelist_filename, picked_preset)
-	pp(pricelist.processed_pricelist)
+
+	module = __import__("Pricelist")
+	class_ = getattr(module, picked_preset['processor'])
+	pricelist = class_(pricelist_filename, picked_preset)
+
+	#Pricelist.generatePrivateXls()
+	pricelist.generate_public_xls()
 	return 1
 
 
